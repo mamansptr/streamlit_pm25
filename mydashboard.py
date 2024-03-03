@@ -18,14 +18,17 @@ response = requests.get(file_url)
 
 # Check if the download was successful
 if response.status_code == 200:
-    # Read the content of the response as a file-like object
-    content = io.StringIO(response.text)
-    
-    # Read the CSV file into a DataFrame
-    merged_df = pd.read_csv(content)
-    
-    # Display the DataFrame in Streamlit
-    st.write(merged_df)
+    try:
+        # Read the content of the response as a file-like object
+        content = io.StringIO(response.text)
+        
+        # Read the CSV file into a DataFrame
+        merged_df = pd.read_csv(content, encoding='utf-8')
+        
+        # Display the DataFrame in Streamlit
+        st.write(merged_df)
+    except Exception as e:
+        st.error(f"Error reading CSV file: {str(e)}")
 else:
     st.error("Failed to download the file. Please check the file URL.")
     
