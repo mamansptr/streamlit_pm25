@@ -6,6 +6,7 @@ import streamlit as st
 # run in terminal: streamlit run dashboard.py
 
 # load dataframe from google drive
+import io
 import requests
 import pandas as pd
 
@@ -17,14 +18,17 @@ response = requests.get(file_url)
 
 # Check if the download was successful
 if response.status_code == 200:
-    # Read the downloaded CSV file into a DataFrame
-    merged_df = pd.read_csv(response.content)
+    # Read the content of the response as a file-like object
+    content = io.StringIO(response.text)
+    
+    # Read the CSV file into a DataFrame
+    merged_df = pd.read_csv(content)
     
     # Display the DataFrame in Streamlit
     st.write(merged_df)
 else:
     st.error("Failed to download the file. Please check the file URL.")
-
+    
 # Group by year and station, calculate mean PM2.5, and reset index
 mean_by_year_and_station = merged_df.groupby(['year', 'station'])['PM2.5'].mean().reset_index()
 
