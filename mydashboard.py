@@ -24,6 +24,7 @@ if response.status_code == 200:
         
         # Read the CSV file into a DataFrame
         merged_df = pd.read_csv(content, encoding='utf-8')
+        merged_df = pd.read_csv(content, delimiter=',', header=None)
         
         # Display the DataFrame in Streamlit
         st.write(merged_df)
